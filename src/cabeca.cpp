@@ -23,27 +23,26 @@ namespace cabeca {
     {
         position = SumVector2(position, speed);
 
-        if (position.x <= 0 || position.x + euconut.width >= GetScreenWidth()) {
+        if (position.x + speed.x <= 0 || position.x + euconut.width + speed.x >= GetScreenWidth()) {
             speed.x *= -1;
             source.width *= -1;
         }
-        if (position.y <= 0 || position.y + euconut.height >= GetScreenHeight()) {
+        if (position.y + speed.y <= 0 || position.y + euconut.height + speed.y >= GetScreenHeight()) {
             speed.y *= -1;
             source.height *= -1;
         }
-        if (IsKeyPressed(KEY_ESCAPE)) reset();
-
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             speed.x *= 1.5;
             speed.y *= 1.5;
 
-            bool isXNeg = speed.x < 0;
-            bool isYNeg = speed.y < 0;
-            
-            if (speed.x >= 20 || speed.x <= -20) speed = {isXNeg ? -4.0f : 4.0f, isYNeg ? -5.0f : 5.0f};
-
+            if (speed.x >= 20 || speed.x <= -20) speed = {
+                speed.x < 0 ? -4.0f : 4.0f,
+                speed.y < 0 ? -5.0f : 4.0f
+            };
         }
+
+        if (IsKeyPressed(KEY_ESCAPE)) reset();
     } 
 
     void draw() 
@@ -51,7 +50,7 @@ namespace cabeca {
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), BLACK);
         
         DrawTextureRec(euconut, source, position, WHITE);
-        
+
         DrawText("Pressione ESC para sair.", 10, 10, 20, LIGHTGRAY);
         DrawText("Clique na tela para mudar a velocidade", 10, 35, 20, LIGHTGRAY);
     }
