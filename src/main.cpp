@@ -17,10 +17,10 @@ int main()
 
     InitAudioDevice();
 
+    
+    // Variáveis gerais, para tudo
     screenLoader currentScreen = TITLE;
-    menuProject currentProject;
-
-    // int frameCounter = 0;
+    menuProject currentProject; 
 
     Sound clickSound = LoadSound("res/click.wav");
     SetSoundVolume(clickSound, 0.6f);
@@ -58,6 +58,7 @@ int main()
     Texture2D creditsPlay = LoadTexture("res/creditsPlay.png");
     Texture2D creditsPause = LoadTexture("res/creditsPause.png");
     Texture2D* creditsCurrentTexture = &creditsPlay;
+    Texture2D creditsTxt = LoadTextureResized("res/creditsTxt.png", 350, 100);
     Rectangle creditsButton1 = {(screenWidth - 239) / 2, 380, 240, 50};
     Circle creditsButton2 = {{549, 321}, 30};
     bool creditsPlaying = false;
@@ -217,8 +218,14 @@ int main()
             {
                 DrawTexture(*creditsCurrentTexture, 0, 0, WHITE);
 
-                DrawRectangle(218, 106, 588 - 218, 366 - 106, ORANGE);
-                // 239 49
+                DrawRectangle(218, 106, 370, 186, ORANGE);
+
+                DrawTexture(creditsTxt, screenWidth/2-175, 130, BLACK);
+                // Coiso do Raylib
+                DrawText("powered by", screenWidth - 90, screenHeight - 95 - 12, 12, LIGHTGRAY);
+                DrawRectangle(screenWidth - 90, screenHeight - 90, 80, 80, BLACK);
+                DrawRectangle(screenWidth - 85, screenHeight - 85, 70, 70, RAYWHITE);
+                DrawText("raylib", screenWidth - 60, screenHeight - 33, 16, BLACK);
             } break;
             case MENU:
             {
