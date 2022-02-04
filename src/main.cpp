@@ -55,13 +55,16 @@ int main()
     
 
     // Variáveis para a tela de créditos
-    Texture2D creditsPlay = LoadTexture("res/creditsPlay.png");
-    Texture2D creditsPause = LoadTexture("res/creditsPause.png");
-    Texture2D* creditsCurrentTexture = &creditsPlay;
+    Texture2D creditsBackground = LoadTexture("res/credits.png");
     Texture2D creditsTxt = LoadTextureResized("res/creditsTxt.png", 350, 100);
+    
+    rename("res/.soundbololo.mp3", "res/soundbololo.png");
+    Texture2D euconutWide = LoadTextureResized("res/soundbololo.png", 350, 90);    
+    rename("res/soundbololo.png", "res/.soundbololo.mp3");
+    
     Rectangle creditsButton1 = {(screenWidth - 239) / 2, 380, 240, 50};
-    Circle creditsButton2 = {{549, 321}, 30};
-    bool creditsPlaying = false;
+    Circle creditsButton2 = {{473, 79}, 14};
+    bool creditsMostra = false;
 
     // Init dos projetos
     cabeca::init();
@@ -69,9 +72,9 @@ int main()
     fogo::init();
     anim::init();
 
-    Vector2 debugPos = {(screenWidth - 239) / 2, 0};
-    Vector2 debugSize = {240, 50};
-    
+    // Vector2 debugPos = {(screenWidth - 239) / 2, 0};
+    // Vector2 debugSize = {240, 50};
+    // int debugRadius = 10;
 
     SetTargetFPS(60);
 
@@ -97,17 +100,14 @@ int main()
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     if (CheckCollisionPointRec(GetMousePosition(), creditsButton1)) {
                         currentScreen = TITLE;
-                        creditsPlaying = false;
+                        creditsMostra = false;
                         PlaySound(clickSound);
                     }
-                    if (CheckCollisionPointCircle(GetMousePosition(), creditsButton2.center,
-                        creditsButton2.radius)) {
-                            PlaySound(clickSound);
-                            creditsPlaying = !creditsPlaying;
-                        }
+                    if (CheckCollisionPointCircle(GetMousePosition(), creditsButton2.center, creditsButton2.radius)) {
+                        creditsMostra = true;
+                        PlaySound(clickSound);
+                    }
                 }
-                if (creditsPlaying) creditsCurrentTexture = &creditsPause;
-                else creditsCurrentTexture = &creditsPlay;
             } break;
             case MENU:
             {
@@ -139,18 +139,18 @@ int main()
                         PlaySound(clickSound);
                     }
                 }
-                if (IsKeyDown(KEY_UP)) {
-                    menuScrollDist -= 3;
+                if (GetMouseWheelMove() > 0) {
+                    menuScrollDist -= 10;
                     for (int i=0; i<(int) menuButtons.size(); i++) {
-                        if (menuScrollDist > 0) menuButtons[i]->move(3);
+                        if (menuScrollDist > 0) menuButtons[i]->move(10);
                     }
                     if (menuScrollDist < 0) menuScrollDist = 0;
                     
                 }
-                if (IsKeyDown(KEY_DOWN)) {
-                    menuScrollDist += 3;
+                if (GetMouseWheelMove() < 0) {
+                    menuScrollDist += 10;
                     for (int i=0; i<(int) menuButtons.size(); i++) {
-                        if (menuScrollDist < 100) menuButtons[i]->move(-3);
+                        if (menuScrollDist < 100) menuButtons[i]->move(-10);
                     }
                     if (menuScrollDist > 100) menuScrollDist = 100;
                 }
@@ -187,7 +187,7 @@ int main()
 
 
         // // Print debugPos
-        // if (IsKeyPressed(KEY_SPACE)) printf("debugPos: %.2f, %.2f\n", debugPos.x, debugPos.y);
+        // if (IsKeyPressed(KEY_SPACE)) printf("debugPos: %.2f, %.2f. Raio: %d\n", debugPos.x, debugPos.y, debugRadius);
         
         // // Funções para cima/baixo
         // if (IsKeyDown(KEY_W)) debugPos.y -= 1;
@@ -201,6 +201,8 @@ int main()
         // if (IsKeyPressed(KEY_LEFT)) debugPos.x -= 1;
         // if (IsKeyPressed(KEY_RIGHT)) debugPos.x += 1;
         
+        // if (IsKeyPressed(KEY_T)) debugRadius++;
+        // if (IsKeyPressed(KEY_G)) debugRadius--;
 
         BeginDrawing();
 
@@ -216,11 +218,13 @@ int main()
             } break;
             case CREDITS:
             {
-                DrawTexture(*creditsCurrentTexture, 0, 0, WHITE);
+                DrawTexture(creditsBackground, 0, 0, WHITE);
 
-                DrawRectangle(218, 106, 370, 186, ORANGE);
+                DrawRectangle(screenWidth/2 - 370/2, 106, 370, 260, ORANGE);
 
                 DrawTexture(creditsTxt, screenWidth/2-175, 130, BLACK);
+                if (creditsMostra) DrawTexture(euconutWide, screenWidth/2 - 350/2, screenHeight/2 + 20, WHITE);
+                
                 // Coiso do Raylib
                 DrawText("powered by", screenWidth - 90, screenHeight - 95 - 12, 12, LIGHTGRAY);
                 DrawRectangle(screenWidth - 90, screenHeight - 90, 80, 80, BLACK);

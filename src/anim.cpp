@@ -44,6 +44,9 @@ namespace anim
                 animAtual++;
                 if (animAtual >= animCount) animAtual = animCount - 1;
             }
+            if (IsKeyPressed(KEY_ENTER)) {
+                stage = 1;
+            }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(GetMousePosition(), playButton)) {
                 stage = 1;
